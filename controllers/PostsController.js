@@ -38,10 +38,23 @@ module.exports.get_post = async (req, res) => {
     const { id } = req.body;
     try {
         const post = await Posts.findById(id);
-        return res.status(200).json({ post, "message": "Post fetched successfully", "success": true });
+        if (post._id === id) {
+            return res.status(200).json({ post, "message": "Post fetched successfully", "success": true });
+        }
     }
     catch (err) {
         console.log(err)
         res.status(400).json({ "message": "Post not found", "success": false, "error": err });
     }
+}
+module.exports.update_post = async (req, res) => {
+    const { id, title, content } = req.body;
+    try {
+        const updatePost = await Posts.findByIdAndUpdate(id, { title, content });
+        return res.status(200).json({ updatePost, "message": "Post updated successfully", "success": true });
+    } catch (err) {
+        console.log(err)
+        res.status(500).json({ "message": "Can't update Post", "success": false, "error": err });
+    }
+
 }
