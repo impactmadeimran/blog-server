@@ -10,6 +10,11 @@ const PostSchema = new Schema({
         type: String,
         required:[true, 'Content is required'],
     },
+    author:{
+        type: String,
+        required:[true, 'Author is required'],
+    }
+    ,
     date:{
         type: Date,
         default: Date.now()

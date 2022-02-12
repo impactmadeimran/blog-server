@@ -1,5 +1,6 @@
 const User = require('../models/User');
 const JWT = require('jsonwebtoken');
+const res = require('express/lib/response');
 
 
 const handleError = (err) => {
@@ -19,6 +20,20 @@ const handleError = (err) => {
         errors.message = "Password must be at least 6 characters";
     }
 
+
+    if (err.errors) {
+        if (err.errors.username) {
+            if (err.errors.username.message === "Username is required") {
+                errors.message = "Username is required";
+            }
+        }
+
+        if (err.errors.fullname.message === "Fullname is required") {
+            errors.message = "Fullname is required";
+        }
+    }
+
+
     return errors;
 }
 
@@ -30,16 +45,17 @@ const createToken = (id) => {
 
 
 module.exports.post_signup = async (req, res) => {
-    const { email, password } = req.body;
+    const { email, username, password } = req.body;
     try {
-        const newuser = await User.create({ email, password });
-        const token = createToken(user._id);
-        return res.status(201).json({ newuser, "message": "Signup successful", "success": true,"token":token });
+        const newuser = await User.create({ email, username, password });
+        const token = createToken(newuser._id);
+        return res.status(201).json({ newuser, "message": "Signup successful", "success": true, "token": token });
     }
     catch (err) {
         const errors = handleError(err);
         console.log(err)
         return res.status(400).json({ errors, "success": false });
+        // return res.json({ err, "success": false });
     }
 }
 module.exports.post_signin = async (req, res) => {
@@ -58,3 +74,12 @@ module.exports.post_signin = async (req, res) => {
     }
 }
 
+module.exports.get_users = async (req,res) => {
+    try{
+        const users = await User.find({});
+        return res.status(201).json({users,"success":true})
+    }
+    catch{
+        return res.status(400).json({"message":"cannot fetch users","success":false})
+    }
+}
