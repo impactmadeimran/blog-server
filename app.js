@@ -10,11 +10,12 @@ const dbURI = "mongodb+srv://alpha:test123@cluster0.maoie.mongodb.net/myFirstDat
 app.use(express.json());
 
 mongoose.connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true }).then(() => {
-    app.listen(PORT, () => {
-        console.log(`Server is listening on port ${PORT}`);
-    })
+    console.log("connected to db")
 }).catch(err => {
     console.log(err)
+})
+app.listen(PORT, () => {
+    console.log(`Server is listening on port ${PORT}`);
 })
 
 app.use(authRoutes,postRoutes)
