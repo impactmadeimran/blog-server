@@ -17,5 +17,8 @@ mongoose.connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true }).the
 app.listen(PORT, () => {
     console.log(`Server is listening on port ${PORT}`);
 })
+app.get('/' , (req,res) => {
+    res.send("Welcome to my server")
+})
 
 app.use(authRoutes,postRoutes)
