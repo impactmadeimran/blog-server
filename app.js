@@ -16,11 +16,11 @@ app.use(express.json());
 
 mongoose.connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true }).then(() => {
     console.log("connected to db")
+    app.listen(PORT, () => {
+        console.log(`Server is listening on port ${PORT}`);
+    })
 }).catch(err => {
     console.log(err)
-})
-app.listen(PORT, () => {
-    console.log(`Server is listening on port ${PORT}`);
 })
 app.get('/', (req, res) => {
     res.send("Welcome to my server")

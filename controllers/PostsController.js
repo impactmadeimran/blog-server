@@ -38,7 +38,7 @@ module.exports.get_post = async (req, res) => {
     const { id } = req.body;
     try {
         const post = await Posts.findById(id);
-        if (post._id === id) {
+        if (post._id == id) {
             return res.status(201).json({ post, "message": "Post fetched successfully", "success": true });
         }
     }
