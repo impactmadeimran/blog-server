@@ -1,6 +1,20 @@
 const User = require('../models/User');
 const JWT = require('jsonwebtoken');
-const res = require('express/lib/response');
+const multer = require('multer')
+const path = require('path')
+
+
+const storage = multer.diskStorage({
+    destination:(req,file,cb) => {
+        cb(null,"./Images");
+    },
+    filename:(req,file,cb) => {
+        cb(null,Date.now() + path.extname(file.originalname))
+        // console.log(file)
+    }
+})
+
+const upload = multer({storage:storage})
 
 
 const handleError = (err) => {
@@ -82,4 +96,12 @@ module.exports.get_users = async (req,res) => {
     catch{
         return res.status(400).json({"message":"cannot fetch users","success":false})
     }
+}
+
+module.exports.update_users = upload.single("image"),async (req,res) => {
+    const file = req.file;
+
+     res.status(201).json({file});
+    
+    
 }

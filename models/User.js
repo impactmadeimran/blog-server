@@ -16,13 +16,17 @@ const UserSchema = new Schema({
         required: [true, 'Fullname is required'],
         unique: true,
         lowercase: true,
+    },
+    avatar: {
+        type: String,
     }
     ,
     username: {
         type: String,
         required: [true, 'Username is required'],
         unique: true,
-        lowercase: true,}
+        lowercase: true,
+    }
     ,
     password: {
         type: String,
