@@ -12,6 +12,8 @@ const dbURI = "mongodb+srv://alpha:test123@cluster0.maoie.mongodb.net/myFirstDat
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors());
+app.use("/Images",express.static('Images'));
+
 
 app.use(express.json());
 
