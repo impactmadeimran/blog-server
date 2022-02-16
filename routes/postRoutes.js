@@ -19,7 +19,7 @@ const upload = multer({ storage: storage })
 
 router.get('/fetch_posts', get_posts);
 router.post('/add_post', upload.single("image"), async (req, res) => {
-    const { title, content, author } = req.body;
+    const { title, content, author, topic } = req.body;
 
     if (!req.file) {
         res.send(400).json({ message: "Please upload a file" })
@@ -27,7 +27,7 @@ router.post('/add_post', upload.single("image"), async (req, res) => {
         const imageUrl = req.file.path;
 
         try {
-            const post = await Posts.create({ title, content, author, image:imageUrl });
+            const post = await Posts.create({ title, content, author, image: imageUrl, topic });
             return res.status(201).json({ post, "message": "Post created successfully", "success": true });
         }
         catch (err) {
@@ -39,14 +39,14 @@ router.post('/add_post', upload.single("image"), async (req, res) => {
 router.post('/remove_post', remove_posts);
 router.post('/fetch_post', get_post);
 router.post('/update_post', upload.single('image'), async (req, res) => {
-    const { id, title, content,author } = req.body;
+    const { id, title, content, author, topic } = req.body;
     if (!req.file) {
         return res.status(400).json({ message: "Please upload a file" })
     }
     else {
         const imageUrl = req.file.path;
         try {
-            const updatePost = await Posts.findByIdAndUpdate(id, { title, content, image:imageUrl, author });
+            const updatePost = await Posts.findByIdAndUpdate(id, { title, content, image: imageUrl, author, topic });
             return res.status(201).json({ updatePost, "message": "Post updated successfully", "success": true });
         } catch (err) {
             console.log(err)
