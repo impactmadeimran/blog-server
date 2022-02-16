@@ -10,6 +10,7 @@ const PORT = process.env.PORT || 3001;
 const dbURI = "mongodb+srv://alpha:test123@cluster0.maoie.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
 
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors());
 
 app.use(express.json());

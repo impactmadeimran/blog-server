@@ -11,17 +11,7 @@ module.exports.get_posts = async (req, res) => {
 
 }
 
-module.exports.add_posts = async (req, res) => {
-    const { title, content, author } = req.body;
-    try {
-        const post = await Posts.create({ title, content, author });
-        return res.status(201).json({ post, "message": "Post created successfully", "success": true });
-    }
-    catch (err) {
-        console.log(err)
-        res.status(400).json({ "message": "Can't create Post", "success": false, "error": err });
-    }
-}
+// module.exports.add_posts = 
 
 module.exports.remove_posts = async (req, res) => {
     const { id } = req.body;
@@ -47,17 +37,7 @@ module.exports.get_post = async (req, res) => {
         res.status(400).json({ "message": "Post not found", "success": false, "error": err });
     }
 }
-module.exports.update_post = async (req, res) => {
-    const { id, title, content } = req.body;
-    try {
-        const updatePost = await Posts.findByIdAndUpdate(id, { title, content });
-        return res.status(201).json({ updatePost, "message": "Post updated successfully", "success": true });
-    } catch (err) {
-        console.log(err)
-        res.status(500).json({ "message": "Can't update Post", "success": false, "error": err });
-    }
-
-}
+// module.exports.update_post =
 
 // Another delete post function 
 

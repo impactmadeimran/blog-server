@@ -98,10 +98,11 @@ module.exports.get_users = async (req,res) => {
     }
 }
 
-module.exports.update_users = upload.single("image"),async (req,res) => {
-    const file = req.file;
+// module.exports.update_users = upload.single("image"),async (req,res) => {
+//     const file = req.file;
+//     res.send(file)
 
-     res.status(201).json({file});
+//     //  res.status(201).json({file});
     
     
-}
+// }
