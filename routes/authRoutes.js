@@ -23,14 +23,12 @@ router.post('/signup', authController.post_signup);
 router.post('/signin', authController.post_signin);
 router.get('/getusers', authController.get_users);
 router.post('/update_users', upload.single("image"), async (req, res) => {
-    const { id, username, fullname, image, email } = req.body;
+    const { id, username, fullname, email } = req.body;
     if (!req.file) {
-        res.send(400).json({ message: "Please upload a file" })
+      return res.send(400).json({ message: "Please upload a file" })
     }
     else {
         const imageUrl = req.file.path;
-        console.log(imageUrl)
-        // console.log(req.file)
         try {
             const user = await User.findByIdAndUpdate(id, {
                  email,
@@ -38,10 +36,10 @@ router.post('/update_users', upload.single("image"), async (req, res) => {
                 username,
                 image: imageUrl
             });
-            res.json({user,  "success": true })
+          return res.status(201).json({user,  "success": true })
         }
         catch (err) {
-            res.json({ message: err })
+           return res.status(400).json({ message: err })
         }
     }
 });

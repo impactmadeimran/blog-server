@@ -37,6 +37,18 @@ module.exports.get_post = async (req, res) => {
         res.status(400).json({ "message": "Post not found", "success": false, "error": err });
     }
 }
+module.exports.user_posts = async (req, res) => {
+    const { author } = req.body
+    try {
+        const posts = await Posts.find({ author: author });
+        if (posts) {
+            return res.status(201).json({ posts, "success": true })
+        }
+    }
+    catch (err) {
+        return res.status(400).json({ "success": false, err })
+    }
+}
 // module.exports.update_post =
 
 // Another delete post function 

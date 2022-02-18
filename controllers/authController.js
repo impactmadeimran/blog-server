@@ -59,16 +59,16 @@ const createToken = (id) => {
 
 
 module.exports.post_signup = async (req, res) => {
-    const { email, username, password } = req.body;
+    const { email, username, password,fullname } = req.body;
     try {
-        const newuser = await User.create({ email, username, password });
+        const newuser = await User.create({ email, username, password,fullname });
         const token = createToken(newuser._id);
         return res.status(201).json({ newuser, "message": "Signup successful", "success": true, "token": token });
     }
     catch (err) {
         const errors = handleError(err);
         console.log(err)
-        return res.status(400).json({ errors, "success": false });
+        return res.status(422).json({ errors, "success": false });
         // return res.json({ err, "success": false });
     }
 }
