@@ -55,9 +55,8 @@ const handleError = (err) => {
 const maxAge = 3 * 24 * 60 * 60 * 1000;
 
 const createToken = (id) => {
-    return JWT.sign({ id }, process.env.JWT_TOKEN, { expiresIn: maxAge });
+    return JWT.sign({ id }, process.env.JWT_SECRET, { expiresIn: maxAge });
 }
-
 
 module.exports.post_signup = async (req, res) => {
     const { email, username, password,fullname } = req.body;
