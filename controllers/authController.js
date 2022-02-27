@@ -2,6 +2,7 @@ const User = require('../models/User');
 const JWT = require('jsonwebtoken');
 const multer = require('multer')
 const path = require('path')
+require('dotenv').config();
 
 
 const storage = multer.diskStorage({
@@ -54,7 +55,7 @@ const handleError = (err) => {
 const maxAge = 3 * 24 * 60 * 60 * 1000;
 
 const createToken = (id) => {
-    return JWT.sign({ id }, "kidsseeghosts", { expiresIn: maxAge });
+    return JWT.sign({ id }, process.env.JWT_TOKEN, { expiresIn: maxAge });
 }
 
 
@@ -68,7 +69,7 @@ module.exports.post_signup = async (req, res) => {
     catch (err) {
         const errors = handleError(err);
         console.log(err)
-        return res.status(422).json({ errors, "success": false });
+        return res.status(400).json({ errors, "success": false });
         // return res.json({ err, "success": false });
     }
 }

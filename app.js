@@ -5,9 +5,10 @@ const authRoutes = require('./routes/authRoutes');
 const postRoutes = require('./routes/postRoutes');
 const bodyParser = require('body-parser');
 const cors = require('cors');
+require('dotenv').config();
 
 const PORT = process.env.PORT || 3001;
-const dbURI = "mongodb+srv://alpha:test123@cluster0.maoie.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
+const dbURI = process.env.MONGODB_URI;
 
 
 app.use(bodyParser.json());

@@ -18,6 +18,9 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage })
 
 router.get('/fetch_posts', get_posts);
+router.post('/remove_post', remove_posts);
+router.post('/fetch_post', get_post);
+router.post('/user_posts', user_posts)
 router.post('/add_post', upload.single("image"), async (req, res) => {
     const { title, content, author, topic } = req.body;
 
@@ -36,9 +39,6 @@ router.post('/add_post', upload.single("image"), async (req, res) => {
         }
     }
 });
-router.post('/remove_post', remove_posts);
-router.post('/fetch_post', get_post);
-router.post('/user_posts',user_posts)
 router.post('/update_post', upload.single('image'), async (req, res) => {
     const { id, title, content, author, topic } = req.body;
     if (!req.file) {
