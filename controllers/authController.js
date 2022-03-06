@@ -44,7 +44,7 @@ const handleError = (err) => {
         }
 
         if (err.errors.fullname.message === "Fullname is required") {
-            errors.message = "Fullname is required";
+            errors.message = "FullName is required";
         }
     }
 
