@@ -31,7 +31,7 @@ router.post('/update_users', upload.single("image"), async (req, res) => {
         const imageUrl = req.file.path;
         try {
             const user = await User.findByIdAndUpdate(id, {
-                 email,
+                email,
                 fullname,
                 username,
                 image: imageUrl
