@@ -67,9 +67,19 @@ module.exports.create_post = async (req, res) => {
     } catch (err) {
         return res.status(400).json({ "success": false, err })
     }
+}
 
+module.exports.update_post = async (req, res) => {
+    const { id } = req.body;
 
+    const { title, author, image, content, topic } = req.body;
+    try {
+        const { error } = await supabase.from('posts').update({ author, image, content, topic, title }).eq("id", id);
+        if (!error) {
+            return res.status(200).json({ "info": "Post updated successfully", "success": true })
+        }
+    } catch (err) {
+        return res.status(400).json({ "info": "Post updated successfully", "success": false })
 
-
-
+    }
 }
