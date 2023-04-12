@@ -1,6 +1,6 @@
 const { Router } = require('express');
 const multer = require('multer');
-const { get_posts, remove_posts, get_post, user_posts } = require('../controllers/PostsController');
+const { get_posts, remove_posts, get_post, user_posts, create_post } = require('../controllers/PostsController');
 const Posts = require('../models/Posts');
 const router = Router();
 const path = require('path');
@@ -21,24 +21,25 @@ router.get('/fetch_posts', get_posts);
 router.post('/remove_post', remove_posts);
 router.post('/fetch_post', get_post);
 router.post('/user_posts', user_posts)
-router.post('/add_post', upload.single("image"), async (req, res) => {
-    const { title, content, author, topic } = req.body;
+router.post('/create_post', create_post);
+// router.post('/add_post', upload.single("image"), async (req, res) => {
+//     const { title, content, author, topic } = req.body;
 
-    if (!req.file) {
-        res.send(400).json({ message: "Please upload a file" })
-    } else {
-        const imageUrl = req.file.path;
+//     if (!req.file) {
+//         res.send(400).json({ message: "Please upload a file" })
+//     } else {
+//         const imageUrl = req.file.path;
 
-        try {
-            const post = await Posts.create({ title, content, author, image: imageUrl, topic });
-            return res.status(201).json({ post, "message": "Post created successfully", "success": true });
-        }
-        catch (err) {
-            console.log(err)
-            res.status(400).json({ "message": "Can't create Post", "success": false, "error": err });
-        }
-    }
-});
+//         try {
+//             const post = await Posts.create({ title, content, author, image: imageUrl, topic });
+//             return res.status(201).json({ post, "message": "Post created successfully", "success": true });
+//         }
+//         catch (err) {
+//             console.log(err)
+//             res.status(400).json({ "message": "Can't create Post", "success": false, "error": err });
+//         }
+//     }
+// });
 router.post('/update_post', upload.single('image'), async (req, res) => {
     const { id, title, content, author, topic } = req.body;
     if (!req.file) {

@@ -1,21 +1,22 @@
-const User = require('../models/User');
 const JWT = require('jsonwebtoken');
 const multer = require('multer')
-const path = require('path')
+const path = require('path');
+const supabase = require('../constants/supabase');
+const bcrypt = require('bcrypt')
 require('dotenv').config();
 
 
-const storage = multer.diskStorage({
-    destination:(req,file,cb) => {
-        cb(null,"./Images");
-    },
-    filename:(req,file,cb) => {
-        cb(null,Date.now() + path.extname(file.originalname))
-        // console.log(file)
-    }
-})
+// const storage = multer.diskStorage({
+//     destination: (req, file, cb) => {
+//         cb(null, "./Images");
+//     },
+//     filename: (req, file, cb) => {
+//         cb(null, Date.now() + path.extname(file.originalname))
+//         // console.log(file)
+//     }
+// })
 
-const upload = multer({storage:storage})
+// const upload = multer({ storage: storage })
 
 
 const handleError = (err) => {
@@ -59,14 +60,20 @@ const createToken = (id) => {
 }
 
 module.exports.post_signup = async (req, res) => {
-    const { email, username, password,fullname } = req.body;
+    const { email, username, password, fullname } = req.body;
     try {
-        const newuser = await User.create({ email, username, password,fullname });
-        const token = createToken(newuser._id);
-        return res.status(201).json({ newuser, "message": "Signup successful", "success": true, "token": token });
+        const salt = await bcrypt.genSalt();
+        const newPass = await bcrypt.hash(password, salt);
+        const { error } = await supabase.from('users').insert({ fullname, email, username, password: newPass })
+
+        if (!error) {
+            return res.status(200).json({ "message": "Signup successful", "success": true });
+        } else {
+            return res.status(400).json({ "message": error.details, "success": false });
+        }
     }
     catch (err) {
-        const errors = handleError(err);
+        // const errors = handleError(err);
         console.log(err)
         return res.status(400).json({ errors, "success": false });
         // return res.json({ err, "success": false });
@@ -75,34 +82,40 @@ module.exports.post_signup = async (req, res) => {
 module.exports.post_signin = async (req, res) => {
     const { email, password } = req.body;
     try {
-        const user = await User.login(email, password);
-        const token = createToken(user._id);
-        return res.status(200).json({ user, "success": true, "message": "Signin successful", "token": token });
+        const token = createToken(email);
+        const { data } = await supabase.from('users').select().eq('email', email);
+        console.log(data)
+        if (data.length >= 1) {
+
+            const isValid = await bcrypt.compare(password, data[0]?.password);
+            if (isValid) {
+                return res.status(200).json({ "success": true, "message": "Signin successful", "token": token });
+            }
+            else {
+                throw new Error('incorrect password');
+            }
+        }
+        else {
+            throw new Error('User not found');
+        }
+
+
     }
     catch (err) {
         console.log(err)
         const errors = handleError(err);
         return res.status(400).json({ errors, "success": false });
-
-
     }
 }
 
-module.exports.get_users = async (req,res) => {
-    try{
-        const users = await User.find({});
-        return res.status(201).json({users,"success":true})
+module.exports.get_users = async (req, res) => {
+    try {
+        const { data, error } = await supabase.from('users').select();
+        return res.status(200).json(data)
+
     }
-    catch{
-        return res.status(400).json({"message":"cannot fetch users","success":false})
+    catch (err) {
+        console.log(err)
+        return res.status(400).json({ "message": "cannot fetch users", "success": false })
     }
 }
-
-// module.exports.update_users = upload.single("image"),async (req,res) => {
-//     const file = req.file;
-//     res.send(file)
-
-//     //  res.status(201).json({file});
-    
-    
-// }
