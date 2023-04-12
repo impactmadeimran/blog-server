@@ -111,7 +111,9 @@ module.exports.post_signin = async (req, res) => {
 module.exports.get_users = async (req, res) => {
     try {
         const { data, error } = await supabase.from('users').select();
-        return res.status(200).json(data)
+        return res.status(200).json(data.map(item => {
+            return { fullname: item?.fullname, created_at: item?.created_at, username: item?.username, email: item?.email, image: item?.image, id: item?.id }
+        }))
 
     }
     catch (err) {
