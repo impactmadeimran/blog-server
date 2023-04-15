@@ -85,10 +85,12 @@ module.exports.post_signin = async (req, res) => {
         const token = createToken(email);
         const { data } = await supabase.from('users').select().eq('email', email);
         if (data.length >= 1) {
-
+            const user = data.map(item => {
+                return { fullname: item?.fullname, username: item?.username, email: item?.email, image: item?.image }
+            })
             const isValid = await bcrypt.compare(password, data[0]?.password);
             if (isValid) {
-                return res.status(200).json({ "success": true, "message": "Signin successful", "token": token });
+                return res.status(200).json({ "success": true, "message": "Signin successful", "token": token, ...user[0] });
             }
             else {
                 throw new Error('incorrect password');
