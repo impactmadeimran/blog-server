@@ -1,6 +1,6 @@
 const JWT = require('jsonwebtoken');
-const multer = require('multer')
-const path = require('path');
+// const multer = require('multer')
+// const path = require('path');
 const supabase = require('../constants/supabase');
 const bcrypt = require('bcrypt')
 require('dotenv').config();
@@ -53,7 +53,7 @@ const handleError = (err) => {
     return errors;
 }
 
-const maxAge = 3 * 24 * 60 * 60 * 1000;
+const maxAge = 30000;
 
 const createToken = (id) => {
     return JWT.sign({ id }, process.env.JWT_SECRET, { expiresIn: maxAge });
@@ -84,7 +84,6 @@ module.exports.post_signin = async (req, res) => {
     try {
         const token = createToken(email);
         const { data } = await supabase.from('users').select().eq('email', email);
-        console.log(data)
         if (data.length >= 1) {
 
             const isValid = await bcrypt.compare(password, data[0]?.password);
